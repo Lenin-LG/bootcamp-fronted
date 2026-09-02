@@ -1,0 +1,31 @@
+<section id="pago" class="section section-light payment">
+  <div class="wrap payment__inner">
+    <div class="payment__copy">
+      <span class="eyebrow on-light payment__eyebrow">// el modelo de pago</span>
+      <h2 class="kicker-title payment__title">
+        Invertimos en ti.<br>Ganamos cuando tú ganas.
+      </h2>
+
+      <div class="payment__list">
+        @for (r of reasons; track r.title) {
+          <div class="payment__reason">
+            <span class="payment__arrow">→</span>
+            <div>
+              <h3 class="payment__reason-title">{{ r.title }}</h3>
+              <p class="payment__reason-desc">{{ r.desc }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="payment__card">
+      <span class="payment__num">$0</span>
+      <span class="payment__label">por adelantado</span>
+      <p class="payment__note">
+        Empiezas a pagar tu bootcamp solo cuando consigas trabajo como
+        developer. En cuotas accesibles, calculadas sobre tu nuevo sueldo.
+      </p>
+    </div>
+  </div>
+</section>

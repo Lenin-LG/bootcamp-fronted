@@ -1,0 +1,76 @@
+<div class="profile-wrapper">
+  <div class="platform-header">
+    <span class="platform-eyebrow">// mi perfil</span>
+    <h2>Mi perfil y contrato</h2>
+    <p>Consulta las condiciones de tu acuerdo de pago diferido con Órbita Solutions</p>
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+
+  <div class="profile-grid">
+    <!-- Formulario Datos Personales -->
+    <form (ngSubmit)="saveProfile()" class="panel-card profile-card">
+      <h3>Mis datos personales</h3>
+      <div class="form-group">
+        <label>Nombre completo</label>
+        <input type="text" [value]="user()?.fullName" disabled />
+      </div>
+
+      <div class="form-group">
+        <label>Correo electrónico</label>
+        <input type="email" [value]="user()?.email" disabled />
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Teléfono / WhatsApp</label>
+        <input type="text" id="phone" [(ngModel)]="phone" name="phone" placeholder="+51987654321" />
+      </div>
+
+      <div class="form-group">
+        <label for="documentNumber">DNI / documento de identidad</label>
+        <input type="text" id="documentNumber" [(ngModel)]="documentNumber" name="documentNumber" placeholder="72819034" />
+      </div>
+
+      <div class="form-group">
+        <label for="cvUrl">Enlace a mi CV / LinkedIn</label>
+        <input type="url" id="cvUrl" [(ngModel)]="cvUrl" name="cvUrl" placeholder="https://linkedin.com/in/tu-perfil" />
+      </div>
+
+      <button type="submit" class="btn-save" [disabled]="saving">
+        <span *ngIf="!saving">Actualizar perfil</span>
+        <span *ngIf="saving">Guardando...</span>
+      </button>
+    </form>
+
+    <!-- Resumen de Contrato ISA -->
+    <div class="panel-card contract-card">
+      <h3>Resumen del contrato (ISA)</h3>
+      <div class="contract-terms">
+        <div class="term-item">
+          <strong>Mecanismo de pago:</strong>
+          <p>12 cuotas mensuales de S/ 850.00. Inicia al conseguir empleo con un tercero en el campo TI.</p>
+        </div>
+
+        <div class="term-item">
+          <strong>Definición de empleo elegible:</strong>
+          <p>Cualquier empleo relacionado al área TI donde Órbita Solutions te ayude a ingresar.</p>
+        </div>
+
+        <div class="term-item">
+          <strong>Pausa por desempleo:</strong>
+          <p>Si pierdes el empleo, las cuotas se pausan automáticamente hasta encontrarte uno nuevo (excepto por abandono de trabajo).</p>
+        </div>
+
+        <div class="term-item">
+          <strong>Garantía de soporte:</strong>
+          <p>7 horas semanales de soporte técnico y mentoría garantizadas post-bootcamp.</p>
+        </div>
+
+        <div class="term-item">
+          <strong>Método de cobro:</strong>
+          <p>Mercado Pago (transferencia / tarjeta de débito o crédito)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

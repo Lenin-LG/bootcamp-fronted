@@ -1,0 +1,18 @@
+<section class="section section-dark whyus">
+  <div class="wrap">
+    <span class="eyebrow">// por qué este bootcamp</span>
+    <h2 class="kicker-title whyus__title">No es solo un curso.<br>Es tu rampa de lanzamiento.</h2>
+
+    <div class="whyus__grid">
+      @for (r of rows; track r.title) {
+        <div class="whyus__row">
+          <div class="whyus__icon">{{ '{' }} {{ '}' }}</div>
+          <div>
+            <h3 class="whyus__row-title">{{ r.title }}</h3>
+            <p class="whyus__row-desc">{{ r.desc }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>

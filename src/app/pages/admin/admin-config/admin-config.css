@@ -1,0 +1,7 @@
+.config-card h3 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  color: var(--ink);
+  margin: 0 0 18px 0;
+}
+.config-card .section-title { margin-top: 30px; }

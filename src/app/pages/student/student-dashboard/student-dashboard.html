@@ -1,0 +1,46 @@
+<div class="dashboard-wrapper">
+  <div class="platform-header">
+    <span class="platform-eyebrow">// mi cuenta</span>
+    <h2>Mi cuenta y progreso bootcamp</h2>
+    <p>Resumen de tu acuerdo de pago diferido con Órbita Solutions</p>
+  </div>
+
+  <div *ngIf="loading" class="loading-box">Cargando tu información...</div>
+
+  <div *ngIf="summary && !loading" class="summary-card">
+    <div class="summary-header">
+      <div class="user-info">
+        <h3>{{ summary.fullName }}</h3>
+        <p>{{ summary.email }}</p>
+      </div>
+      <div class="status-badge" [ngClass]="{
+        'status-working': summary.employmentStatus === 'TRABAJANDO',
+        'status-searching': summary.employmentStatus === 'BUSCANDO_TRABAJO'
+      }">
+        Estado: {{ summary.employmentStatus === 'TRABAJANDO' ? 'Trabajando' : 'Buscando trabajo' }}
+      </div>
+    </div>
+
+    <div class="metrics-row">
+      <div class="metric-item">
+        <span class="label">Cuotas pagadas</span>
+        <span class="val highlight">{{ summary.paidInstallments }} / {{ summary.totalInstallments }}</span>
+      </div>
+
+      <div class="metric-item">
+        <span class="label">Saldo pendiente</span>
+        <span class="val">S/ {{ summary.remainingBalance | number:'1.2-2' }}</span>
+      </div>
+
+      <div class="metric-item">
+        <span class="label">Próximo pago</span>
+        <span class="val accent">S/ {{ summary.nextPaymentAmount | number:'1.2-2' }}</span>
+      </div>
+    </div>
+
+    <div class="actions-row">
+      <a routerLink="/alumno/mis-pagos" class="btn btn-primary">Ver mis 12 cuotas</a>
+      <a routerLink="/alumno/mi-empleo" class="btn btn-ghost btn-ghost--light">Reportar cambio laboral</a>
+    </div>
+  </div>
+</div>

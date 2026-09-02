@@ -1,0 +1,157 @@
+<div class="students-container">
+  <div class="header-section">
+    <div class="platform-header" style="margin-bottom:0;">
+      <span class="platform-eyebrow">// gestión de alumnos</span>
+      <h2>Lista de alumnos registrados</h2>
+      <p>Gestión de expedientes, postulaciones y contratos de cobro diferido</p>
+    </div>
+    <div class="search-bar">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="applyFilter()"
+        placeholder="Buscar por nombre o correo..."
+      />
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-box">Cargando alumnos...</div>
+
+  <div *ngIf="!loading" class="table-card">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Alumno</th>
+          <th>Postulación</th>
+          <th>Estado laboral</th>
+          <th>Contrato</th>
+          <th>Cuotas</th>
+          <th>Saldo pendiente</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of filteredStudents">
+          <td class="user-cell">
+            <div class="user-name">{{ s.fullName }}</div>
+            <div class="user-email">{{ s.email }}</div>
+          </td>
+          <td>
+            <span class="badge" [ngClass]="{
+              'badge-warning': s.approvalStatus === 'EN_EVALUACION',
+              'badge-success': s.approvalStatus === 'APROBADO',
+              'badge-danger': s.approvalStatus === 'RECHAZADO'
+            }">
+              {{ s.approvalStatus === 'EN_EVALUACION' ? 'En evaluación' : s.approvalStatus }}
+            </span>
+          </td>
+          <td>
+            <span class="badge badge-info">
+              {{ s.employmentStatus === 'TRABAJANDO' ? 'Trabajando' : 'Buscando trabajo' }}
+            </span>
+          </td>
+          <td>
+            <span class="badge" [ngClass]="{
+              'badge-success': s.contractStatus === 'COBRANDO_ACTIVO',
+              'badge-warning': s.contractStatus === 'SIN_EMPLEO_PAUSADO' || s.contractStatus === 'PENDIENTE_ACTIVACION'
+            }">
+              {{ s.contractStatus === 'COBRANDO_ACTIVO' ? 'Cobrando activo' : 'Pausado / pendiente' }}
+            </span>
+          </td>
+          <td class="center-text">
+            <strong>{{ s.paidInstallments }} / {{ s.totalInstallments }}</strong>
+          </td>
+          <td class="amount-text">
+            S/ {{ s.remainingBalance | number:'1.2-2' }}
+          </td>
+          <td>
+            <button class="btn-action" (click)="viewDetail(s.id)">Ver detalle</button>
+            <button
+              *ngIf="s.approvalStatus === 'EN_EVALUACION'"
+              class="btn-approve"
+              (click)="approveApplication(s.userId)"
+            >
+              Aprobar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal Detalle del Alumno -->
+  <div *ngIf="showModal" class="modal-backdrop" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Expediente del alumno</h3>
+        <button class="close-btn" (click)="closeModal()">×</button>
+      </div>
+
+      <div *ngIf="detailLoading" class="loading-box">Cargando detalles...</div>
+
+      <div *ngIf="selectedStudent && !detailLoading" class="modal-body">
+        <div class="student-info-grid">
+          <div class="info-group">
+            <label>Nombre completo</label>
+            <span>{{ selectedStudent.fullName }}</span>
+          </div>
+          <div class="info-group">
+            <label>Correo electrónico</label>
+            <span>{{ selectedStudent.email }}</span>
+          </div>
+          <div class="info-group">
+            <label>Teléfono</label>
+            <span>{{ selectedStudent.phone || 'No registrado' }}</span>
+          </div>
+          <div class="info-group">
+            <label>Empresa actual</label>
+            <span>{{ selectedStudent.companyName || 'Ninguna' }}</span>
+          </div>
+          <div class="info-group">
+            <label>Puesto laboral</label>
+            <span>{{ selectedStudent.jobTitle || 'N/A' }}</span>
+          </div>
+          <div class="info-group">
+            <label>Método de pago</label>
+            <span>{{ selectedStudent.paymentMethodInfo }}</span>
+          </div>
+        </div>
+
+        <div class="contract-control-box">
+          <h4>Control de estado contractual</h4>
+          <div class="control-actions">
+            <button
+              class="btn-control btn-activate"
+              (click)="changeContractStatus('COBRANDO_ACTIVO', 'TRABAJANDO')"
+            >
+              Activar cobros (consiguió trabajo)
+            </button>
+            <button
+              class="btn-control btn-pause"
+              (click)="changeContractStatus('SIN_EMPLEO_PAUSADO', 'BUSCANDO_TRABAJO')"
+            >
+              Pausar por desempleo (perdió trabajo)
+            </button>
+          </div>
+        </div>
+
+        <h4>Progreso de 12 cuotas (S/ 850.00 c/u)</h4>
+        <div class="installments-grid">
+          <div
+            *ngFor="let inst of selectedStudent.installments"
+            class="installment-pill"
+            [ngClass]="{
+              'status-pagado': inst.status === 'PAGADO',
+              'status-pendiente': inst.status === 'PENDIENTE',
+              'status-pausado': inst.status === 'PAUSADO',
+              'status-fallido': inst.status === 'FALLIDO'
+            }"
+          >
+            <span class="inst-num">{{ inst.installmentNumber }}/12</span>
+            <span class="inst-status">{{ inst.status }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

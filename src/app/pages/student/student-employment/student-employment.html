@@ -1,0 +1,105 @@
+<div class="employment-wrapper">
+  <div class="platform-header">
+    <span class="platform-eyebrow">// mi empleo</span>
+    <h2>Mi estado laboral</h2>
+    <p>Notifica a Órbita Solutions cuando comiences a trabajar o si pierdes tu empleo, para gestionar tus cuotas</p>
+  </div>
+
+  <div class="action-buttons-box">
+    <button class="btn-job btn-success" (click)="openReportModal('CONSEGUI_TRABAJO')">
+      <div class="btn-text">
+        <strong>Conseguí trabajo</strong>
+        <span>Notificar nuevo empleo TI y activar cuotas</span>
+      </div>
+    </button>
+
+    <button class="btn-job btn-warning" (click)="openReportModal('PERDI_TRABAJO')">
+      <div class="btn-text">
+        <strong>Perdí mi trabajo</strong>
+        <span>Solicitar pausa de cuotas por desempleo</span>
+      </div>
+    </button>
+  </div>
+
+  <div class="history-section">
+    <h3>Historial de solicitudes enviadas</h3>
+    <div *ngIf="loading" class="loading-box">Cargando reporte...</div>
+
+    <div *ngIf="!loading && reports.length === 0" class="empty-state">
+      No has enviado ningún reporte laboral aún.
+    </div>
+
+    <div *ngIf="!loading && reports.length > 0" class="reports-list">
+      <div *ngFor="let r of reports" class="report-card">
+        <div class="report-header">
+          <span class="type-tag" [ngClass]="{
+            'tag-work': r.reportType === 'CONSEGUI_TRABAJO',
+            'tag-unemploy': r.reportType === 'PERDI_TRABAJO'
+          }">
+            {{ r.reportType === 'CONSEGUI_TRABAJO' ? 'Conseguí trabajo' : 'Perdí mi trabajo' }}
+          </span>
+          <span class="status-badge" [ngClass]="{
+            'status-pending': r.status === 'PENDIENTE',
+            'status-approved': r.status === 'APROBADO'
+          }">
+            {{ r.status === 'PENDIENTE' ? 'En revisión por admin' : 'Aprobado' }}
+          </span>
+        </div>
+
+        <div class="report-body">
+          <p *ngIf="r.companyName"><strong>Empresa:</strong> {{ r.companyName }} ({{ r.position }})</p>
+          <p *ngIf="r.notes"><strong>Notas:</strong> {{ r.notes }}</p>
+          <span class="date">Enviado el: {{ r.createdAt | date:'short' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para Reportar -->
+  <div *ngIf="showModal" class="modal-backdrop" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ reportType === 'CONSEGUI_TRABAJO' ? 'Reportar nuevo empleo' : 'Solicitar pausa por desempleo' }}</h3>
+        <button class="close-btn" (click)="closeModal()">×</button>
+      </div>
+
+      <form (ngSubmit)="submitReport()" class="modal-form">
+        <div *ngIf="reportType === 'CONSEGUI_TRABAJO'">
+          <div class="form-group">
+            <label for="companyName">Nombre de la empresa *</label>
+            <input type="text" id="companyName" [(ngModel)]="companyName" name="companyName" placeholder="Ej: TechCorp SAC" required />
+          </div>
+
+          <div class="form-group">
+            <label for="position">Puesto / cargo *</label>
+            <input type="text" id="position" [(ngModel)]="position" name="position" placeholder="Ej: Desarrollador Backend Junior" required />
+          </div>
+
+          <div class="form-group">
+            <label for="startDateStr">Fecha de inicio de contrato</label>
+            <input type="date" id="startDateStr" [(ngModel)]="startDateStr" name="startDateStr" />
+          </div>
+        </div>
+
+        <div *ngIf="reportType === 'PERDI_TRABAJO'">
+          <p class="alert-info">
+            Al reportar pérdida de empleo, Órbita Solutions validará el caso y pausará las cuotas pendientes hasta encontrar un nuevo empleo TI.
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label for="notes">Comentarios / notas adicionales</label>
+          <textarea id="notes" [(ngModel)]="notes" name="notes" rows="3" placeholder="Detalles de la oferta o motivo..."></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" (click)="closeModal()">Cancelar</button>
+          <button type="submit" class="btn-submit" [disabled]="submitting">
+            <span *ngIf="!submitting">Enviar reporte al admin</span>
+            <span *ngIf="submitting">Enviando...</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

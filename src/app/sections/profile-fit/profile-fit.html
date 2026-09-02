@@ -1,0 +1,26 @@
+<section id="faq" class="section section-light profile">
+  <div class="wrap">
+    <span class="eyebrow on-light">// para quién es esto</span>
+    <h2 class="kicker-title profile__title">¿Este bootcamp es para ti?</h2>
+
+    <div class="profile__grid">
+      <div class="profile__card">
+        <h3 class="profile__card-title profile__card-title--yes">Sí, si...</h3>
+        <ul class="profile__list">
+          @for (y of yes; track y) {
+            <li><span class="profile__mark profile__mark--yes">✓</span>{{ y }}</li>
+          }
+        </ul>
+      </div>
+
+      <div class="profile__card profile__card--muted">
+        <h3 class="profile__card-title">No necesitas...</h3>
+        <ul class="profile__list">
+          @for (n of no; track n) {
+            <li><span class="profile__mark">—</span>{{ n }}</li>
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

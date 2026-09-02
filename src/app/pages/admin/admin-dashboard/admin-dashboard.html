@@ -1,0 +1,50 @@
+<div class="dashboard-wrapper">
+  <div class="platform-header">
+    <span class="platform-eyebrow">// resumen general</span>
+    <h2>Resumen general del bootcamp</h2>
+    <p>Métricas clave de alumnos, empleos y cobranzas activas</p>
+  </div>
+
+  <div *ngIf="loading" class="loading-state">Cargando métricas...</div>
+  <div *ngIf="error" class="error-state">{{ error }}</div>
+
+  <div *ngIf="summary && !loading" class="stat-grid">
+    <div class="stat-card">
+      <span class="stat-num">{{ summary.totalStudents }}</span>
+      <span class="stat-label">Alumnos totales</span>
+    </div>
+
+    <div class="stat-card">
+      <span class="stat-num">{{ summary.workingStudents }}</span>
+      <span class="stat-label">Con trabajo</span>
+    </div>
+
+    <div class="stat-card is-warning">
+      <span class="stat-num">{{ summary.jobHuntingStudents }}</span>
+      <span class="stat-label">Buscando trabajo</span>
+    </div>
+
+    <div class="stat-card">
+      <span class="stat-num">{{ summary.activePaymentsCount }}</span>
+      <span class="stat-label">Pagos activos</span>
+    </div>
+
+    <div class="stat-card is-warning">
+      <span class="stat-num">{{ summary.pausedPaymentsCount }}</span>
+      <span class="stat-label">Pagos pausados</span>
+    </div>
+
+    <div class="stat-card is-danger">
+      <span class="stat-num">{{ summary.failedPaymentsCount }}</span>
+      <span class="stat-label">Pagos fallidos</span>
+    </div>
+  </div>
+
+  <div *ngIf="summary && !loading" class="banner-collected">
+    <div>
+      <div class="banner-title">Monto total cobrado acumulado</div>
+      <div class="banner-value">S/ {{ summary.totalCollectedAmount | number:'1.2-2' }}</div>
+    </div>
+    <div class="banner-tag">Mercado Pago verificado</div>
+  </div>
+</div>

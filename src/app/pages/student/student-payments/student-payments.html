@@ -1,0 +1,57 @@
+<div class="payments-wrapper">
+  <div class="platform-header">
+    <span class="platform-eyebrow">// mis cuotas</span>
+    <h2>Mis 12 cuotas de pago diferido</h2>
+    <p>Visualiza el estado individual de cada cuota mensual de S/ 850.00</p>
+  </div>
+
+  <div *ngIf="loading" class="loading-box">Cargando tus cuotas...</div>
+
+  <div *ngIf="!loading" class="installments-grid">
+    <div
+      *ngFor="let inst of installments"
+      class="installment-card"
+      [ngClass]="{
+        'card-pagado': inst.status === 'PAGADO',
+        'card-pendiente': inst.status === 'PENDIENTE',
+        'card-pausado': inst.status === 'PAUSADO',
+        'card-fallido': inst.status === 'FALLIDO'
+      }"
+    >
+      <div class="card-header">
+        <span class="inst-title">Cuota {{ inst.installmentNumber }}/12</span>
+        <span class="inst-badge">
+          <ng-container *ngIf="inst.status === 'PAGADO'">Pagado</ng-container>
+          <ng-container *ngIf="inst.status === 'PENDIENTE'">Pendiente</ng-container>
+          <ng-container *ngIf="inst.status === 'PAUSADO'">Pausado</ng-container>
+          <ng-container *ngIf="inst.status === 'FALLIDO'">Rechazado</ng-container>
+        </span>
+      </div>
+
+      <div class="card-body">
+        <div class="amount">S/ {{ inst.amount | number:'1.2-2' }}</div>
+        <div class="meta" *ngIf="inst.status === 'PAGADO'">
+          Pagado el: {{ inst.paidAt | date:'shortDate' }}
+          <span class="mp-tag" *ngIf="inst.mpPaymentId">{{ inst.mpPaymentId }}</span>
+        </div>
+        <div class="meta" *ngIf="inst.status !== 'PAGADO'">
+          Vencimiento: {{ inst.dueDate || 'Al activar empleo' }}
+        </div>
+      </div>
+
+      <div class="card-footer" *ngIf="inst.status === 'PENDIENTE' || inst.status === 'FALLIDO'">
+        <button
+          class="btn-pay"
+          (click)="payWithMercadoPago(inst)"
+          [disabled]="payingId === inst.id"
+        >
+          <span *ngIf="payingId !== inst.id">Pagar con Mercado Pago</span>
+          <span *ngIf="payingId === inst.id">Cargando pasarela...</span>
+        </button>
+        <button class="btn-simulated" (click)="confirmSimulatedPayment(inst)" title="Probar pago instantáneo local">
+          Simular pago
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

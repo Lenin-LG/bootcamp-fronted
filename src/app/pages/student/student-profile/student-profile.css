@@ -1,0 +1,21 @@
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.panel-card h3 {
+  font-family: var(--font-head);
+  font-size: 17px;
+  color: var(--ink);
+  margin: 0 0 20px 0;
+}
+
+.contract-terms { display: flex; flex-direction: column; gap: 18px; }
+.term-item strong { display: block; font-size: 13px; color: var(--ink); margin-bottom: 4px; }
+.term-item p { font-size: 12.5px; color: var(--ink-soft); line-height: 1.55; }
+
+@media (max-width: 860px) {
+  .profile-grid { grid-template-columns: 1fr; }
+}

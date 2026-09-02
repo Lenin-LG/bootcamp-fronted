@@ -1,0 +1,111 @@
+.header-section {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 26px;
+}
+
+.search-bar input {
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: var(--ink);
+  background: var(--card);
+  border: 1.5px solid #E4E7EB;
+  border-radius: 30px;
+  padding: 11px 18px;
+  min-width: 260px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+.search-bar input:focus { border-color: var(--mint); }
+
+/* --- Modal contents --- */
+.student-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+  margin-bottom: 26px;
+}
+
+.info-group { display: flex; flex-direction: column; gap: 4px; }
+.info-group label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+.info-group span { font-size: 14px; color: var(--ink); }
+
+.contract-control-box {
+  background: var(--off-white);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+.contract-control-box h4 {
+  font-family: var(--font-head);
+  font-size: 15px;
+  color: var(--ink);
+  margin: 0 0 14px 0;
+}
+
+.control-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-control {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 12.5px;
+  border: none;
+  border-radius: 30px;
+  padding: 10px 16px;
+  cursor: pointer;
+  flex: 1;
+  min-width: 200px;
+}
+.btn-activate { background: var(--mint-tint); color: var(--mint-dark); }
+.btn-pause { background: var(--amber-tint); color: #8A5A0E; }
+
+.modal-body h4 {
+  font-family: var(--font-head);
+  font-size: 15px;
+  color: var(--ink);
+  margin: 20px 0 14px 0;
+}
+
+.installments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+  gap: 10px;
+}
+
+.installment-pill {
+  border-radius: 12px;
+  padding: 12px 8px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 1.5px solid #E4E7EB;
+}
+.installment-pill .inst-num { font-weight: 700; font-size: 13px; color: var(--ink); }
+.installment-pill .inst-status { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink-soft); }
+
+.installment-pill.status-pagado { background: var(--mint-tint); border-color: rgba(31,166,121,0.3); }
+.installment-pill.status-pagado .inst-status { color: var(--mint-dark); }
+.installment-pill.status-pendiente { background: #F0F1F3; }
+.installment-pill.status-pausado { background: var(--amber-tint); border-color: rgba(242,169,59,0.3); }
+.installment-pill.status-pausado .inst-status { color: #8A5A0E; }
+.installment-pill.status-fallido { background: var(--danger-tint); border-color: rgba(229,72,77,0.3); }
+.installment-pill.status-fallido .inst-status { color: var(--danger); }
+
+@media (max-width: 640px) {
+  .student-info-grid { grid-template-columns: 1fr; }
+  .search-bar input { min-width: 0; width: 100%; }
+}

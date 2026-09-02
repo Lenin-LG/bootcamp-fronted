@@ -1,0 +1,39 @@
+<div class="admin-container">
+  <aside class="sidebar">
+    <div class="brand">
+      <app-logo [size]="28" />
+      <div class="brand-name">Órbita <span>Admin</span></div>
+    </div>
+
+    <nav class="nav-menu">
+      <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-item">Dashboard</a>
+      <a routerLink="/admin/alumnos" routerLinkActive="active" class="nav-item">Alumnos</a>
+      <a routerLink="/admin/pagos" routerLinkActive="active" class="nav-item">Pagos</a>
+      <a routerLink="/admin/configuracion" routerLinkActive="active" class="nav-item">Configuración</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar">{{ (user()?.fullName || 'A').charAt(0) }}</div>
+        <div class="user-details">
+          <span class="name">{{ user()?.fullName || 'Administrador' }}</span>
+          <span class="role">Admin Órbita</span>
+        </div>
+      </div>
+      <button (click)="logout()" class="btn-logout" title="Cerrar sesión">Salir</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-header">
+      <div>
+        <span class="platform-eyebrow">// panel de administración</span>
+        <h1 class="header-title">Panel de Administración</h1>
+      </div>
+      <div class="header-badge">Órbita Solutions ISA</div>
+    </header>
+    <div class="content-body">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

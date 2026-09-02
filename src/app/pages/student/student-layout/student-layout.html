@@ -1,0 +1,25 @@
+<div class="student-container">
+  <header class="top-nav">
+    <div class="nav-brand">
+      <app-logo [size]="26" />
+      <div class="logo">Órbita <span>Solutions</span></div>
+      <span class="portal-tag">Portal Alumno</span>
+    </div>
+
+    <nav class="nav-links">
+      <a routerLink="/alumno/inicio" routerLinkActive="active" class="nav-link">Inicio</a>
+      <a routerLink="/alumno/mis-pagos" routerLinkActive="active" class="nav-link">Mis Pagos</a>
+      <a routerLink="/alumno/mi-empleo" routerLinkActive="active" class="nav-link">Mi Empleo</a>
+      <a routerLink="/alumno/mi-perfil" routerLinkActive="active" class="nav-link">Mi Perfil</a>
+    </nav>
+
+    <div class="user-menu">
+      <span class="user-name">Hola, {{ user()?.fullName || 'Alumno' }}</span>
+      <button (click)="logout()" class="btn-logout">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <main class="main-body">
+    <router-outlet></router-outlet>
+  </main>
+</div>

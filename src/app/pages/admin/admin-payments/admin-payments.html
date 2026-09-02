@@ -1,0 +1,51 @@
+<div class="payments-container">
+  <div class="platform-header">
+    <span class="platform-eyebrow">// control de cobranzas</span>
+    <h2>Control global de pagos y cobranzas</h2>
+    <p>Historial de quién pagó, cuotas fallidas, total cobrado e ID de transacciones Mercado Pago</p>
+  </div>
+
+  <div *ngIf="loading" class="loading-box">Cargando pagos...</div>
+
+  <div *ngIf="!loading" class="table-card">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Alumno</th>
+          <th>Cuota</th>
+          <th>Monto</th>
+          <th>Fecha vencimiento</th>
+          <th>Estado</th>
+          <th>Fecha de pago</th>
+          <th>Método / ID Mercado Pago</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of payments">
+          <td class="user-cell">
+            <div class="user-name">{{ p.studentName }}</div>
+            <div class="user-email">{{ p.studentEmail }}</div>
+          </td>
+          <td><strong>{{ p.installmentNumber }} / {{ p.totalInstallments }}</strong></td>
+          <td class="amount">S/ {{ p.amount | number:'1.2-2' }}</td>
+          <td>{{ p.dueDate || 'Sin fecha' }}</td>
+          <td>
+            <span class="badge" [ngClass]="{
+              'badge-success': p.status === 'PAGADO',
+              'badge-warning': p.status === 'PENDIENTE',
+              'badge-secondary': p.status === 'PAUSADO',
+              'badge-danger': p.status === 'FALLIDO'
+            }">
+              {{ p.status }}
+            </span>
+          </td>
+          <td>{{ p.paidAt ? (p.paidAt | date:'short') : '-' }}</td>
+          <td class="mp-info">
+            <div>{{ p.paymentMethod || 'Mercado Pago' }}</div>
+            <code *ngIf="p.mpPaymentId">{{ p.mpPaymentId }}</code>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

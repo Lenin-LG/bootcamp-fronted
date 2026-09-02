@@ -1,0 +1,18 @@
+<section class="section section-light problem">
+  <div class="wrap">
+    <span class="eyebrow on-light">// el problema</span>
+    <h2 class="kicker-title problem__title">
+      Entrar a tech no debería<br>ser tan difícil
+    </h2>
+
+    <div class="problem__grid">
+      @for (item of items; track item.title) {
+        <div class="problem__item">
+          <div class="problem__icon">✕</div>
+          <h3 class="problem__item-title">{{ item.title }}</h3>
+          <p class="problem__item-desc">{{ item.desc }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>

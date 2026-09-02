@@ -1,0 +1,2 @@
+/* Estilos compartidos en src/styles.css (.auth-wrapper, .auth-card, etc.) */
+.auth-card--wide { max-width: 480px; }

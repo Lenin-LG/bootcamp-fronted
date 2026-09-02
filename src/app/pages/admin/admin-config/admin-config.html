@@ -1,0 +1,50 @@
+<div class="config-container">
+  <div class="platform-header">
+    <span class="platform-eyebrow">// configuración</span>
+    <h2>Configuración de la plataforma</h2>
+    <p>Ajusta el monto por cuotas, parámetros contractuales y llaves de Mercado Pago Developers</p>
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <div *ngIf="loading" class="loading-box">Cargando configuración...</div>
+
+  <form *ngIf="!loading" (ngSubmit)="saveConfig()" class="panel-card config-card">
+    <h3>Parámetros contractuales (ISA)</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="installmentAmount">Monto por cuota mensual (S/)</label>
+        <input type="text" id="installmentAmount" [(ngModel)]="config.installmentAmount" name="installmentAmount" />
+      </div>
+
+      <div class="form-group">
+        <label for="totalInstallments">Total de cuotas</label>
+        <input type="text" id="totalInstallments" [(ngModel)]="config.totalInstallments" name="totalInstallments" />
+      </div>
+
+      <div class="form-group full-width">
+        <label for="receivingAccount">Cuenta / correo de recepción de fondos</label>
+        <input type="email" id="receivingAccount" [(ngModel)]="config.receivingAccount" name="receivingAccount" />
+      </div>
+    </div>
+
+    <h3 class="section-title">Integración Mercado Pago Developers</h3>
+    <div class="form-grid">
+      <div class="form-group full-width">
+        <label for="mpPublicKey">Mercado Pago Public Key (TEST-...)</label>
+        <input type="text" id="mpPublicKey" [(ngModel)]="config.mpPublicKey" name="mpPublicKey" />
+      </div>
+
+      <div class="form-group full-width">
+        <label for="mpAccessToken">Mercado Pago Access Token (TEST-...)</label>
+        <input type="password" id="mpAccessToken" [(ngModel)]="config.mpAccessToken" name="mpAccessToken" />
+      </div>
+    </div>
+
+    <button type="submit" class="btn-save" [disabled]="saving">
+      <span *ngIf="!saving">Guardar configuración</span>
+      <span *ngIf="saving">Guardando...</span>
+    </button>
+  </form>
+</div>

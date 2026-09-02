@@ -1,0 +1,17 @@
+<section id="como-funciona" class="section section-dark how">
+  <div class="wrap">
+    <span class="eyebrow">// cómo funciona</span>
+    <h2 class="kicker-title how__title">De la postulación a tu primer sueldo dev</h2>
+
+    <div class="how__timeline">
+      <div class="how__line"></div>
+      @for (step of steps; track step.title; let i = $index; let last = $last) {
+        <div class="how__step" [class.how__step--last]="last">
+          <div class="how__dot" [class.how__dot--filled]="last">{{ i + 1 }}</div>
+          <h3 class="how__step-title">{{ step.title }}</h3>
+          <p class="how__step-desc">{{ step.desc }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>

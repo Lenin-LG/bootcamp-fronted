@@ -1,0 +1,26 @@
+<section class="section section-dark solution">
+  <span class="bracket-mark solution__bracket">{{ '}' }}</span>
+  <div class="wrap solution__inner">
+    <div class="solution__copy">
+      <span class="eyebrow">// la solución</span>
+      <h2 class="kicker-title solution__title">
+        Un bootcamp que solo<br>gana cuando tú ganas
+      </h2>
+      <p class="solution__desc">
+        Formación 100% enfocada en lo que las empresas piden hoy para un puesto
+        backend junior: Java, Spring Boot, Spring Cloud y fundamentos de nube.
+        Nada de relleno, solo lo que te abre la puerta a tu primer
+        (o próximo) trabajo dev.
+      </p>
+    </div>
+
+    <div class="solution__cards">
+      @for (s of stats; track s.label) {
+        <div class="solution__card">
+          <span class="solution__card-num">{{ s.num }}</span>
+          <span class="solution__card-label">{{ s.label }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,16 @@
+<section id="plan-de-estudios" class="section section-light curriculum">
+  <div class="wrap">
+    <span class="eyebrow on-light">// qué vas a dominar</span>
+    <h2 class="kicker-title curriculum__title">El plan de estudios, de punta a punta</h2>
+
+    <div class="curriculum__grid">
+      @for (m of modules; track m.title) {
+        <div class="curriculum__card">
+          <div class="curriculum__icon">{{ '{' }} {{ '}' }}</div>
+          <h3 class="curriculum__card-title">{{ m.title }}</h3>
+          <p class="curriculum__card-desc">{{ m.desc }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
