@@ -1,0 +1,153 @@
+<div class="admin-classes-wrapper">
+  <div class="platform-header">
+    <div class="header-main">
+      <div>
+        <span class="platform-eyebrow">// gestión académica</span>
+        <h2>Plan de Clases y Syllabus Bootcamp</h2>
+        <p>Administra las sesiones en vivo, enlaces de videos, diapositivas y tareas asignadas.</p>
+      </div>
+      <button class="btn btn-primary" (click)="openCreateModal()">
+        + Agregar Nueva Clase
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="toastMessage" class="alert alert-success toast-floating">
+    {{ toastMessage }}
+  </div>
+
+  <div *ngIf="loading" class="loading-box">
+    Cargando lista de clases...
+  </div>
+
+  <div *ngIf="!loading" class="panel-card">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th># Clase</th>
+          <th>Título de la Clase</th>
+          <th>Módulo</th>
+          <th>Estado</th>
+          <th>Recursos</th>
+          <th>Tarea</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of classes">
+          <td><strong>Clase {{ item.classNumber }}</strong></td>
+          <td>
+            <div class="class-info-cell">
+              <strong>{{ item.title }}</strong>
+              <small>{{ item.description }}</small>
+            </div>
+          </td>
+          <td><span class="badge badge-info">{{ item.moduleName }}</span></td>
+          <td>
+            <span *ngIf="item.isCompleted" class="badge badge-success">Completado</span>
+            <span *ngIf="!item.isCompleted" class="badge badge-warning">Próxima</span>
+          </td>
+          <td>
+            <div class="res-mini-links">
+              <a *ngIf="item.videoUrl" [href]="item.videoUrl" target="_blank" class="link-item">📹 Video</a>
+              <a *ngIf="item.slidesUrl" [href]="item.slidesUrl" target="_blank" class="link-item">📄 PDF</a>
+            </div>
+          </td>
+          <td>
+            <span *ngIf="item.hasAssignment" class="badge badge-secondary">📌 {{ item.assignmentTitle }}</span>
+            <span *ngIf="!item.hasAssignment" class="text-muted">Sin tarea</span>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-icon" (click)="openEditModal(item)" title="Editar">✏️</button>
+              <button class="btn-icon btn-danger-icon" (click)="deleteClass(item.id)" title="Eliminar">🗑️</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Create/Edit Modal -->
+  <div *ngIf="showModal" class="modal-backdrop" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ currentClass.id ? 'Editar Clase' : 'Agregar Nueva Clase' }}</h3>
+        <button class="close-btn" (click)="closeModal()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <form (ngSubmit)="saveClass()">
+          <div class="form-row">
+            <div class="form-group half">
+              <label for="classNum">Número de Clase</label>
+              <input type="number" id="classNum" [(ngModel)]="currentClass.classNumber" name="classNumber" required />
+            </div>
+
+            <div class="form-group half">
+              <label for="modSelect">Módulo</label>
+              <select id="modSelect" [(ngModel)]="currentClass.moduleName" name="moduleName">
+                <option *ngFor="let m of modulesList" [value]="m">{{ m }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="classTitle">Título de la Clase *</label>
+            <input type="text" id="classTitle" [(ngModel)]="currentClass.title" name="title" required placeholder="Ej: Microservicios con Spring Cloud Gateway" />
+          </div>
+
+          <div class="form-group">
+            <label for="classDesc">Descripción del Tema</label>
+            <textarea id="classDesc" [(ngModel)]="currentClass.description" name="description" rows="2"></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group half">
+              <label for="videoUrl">Enlace de Grabación / Video</label>
+              <input type="url" id="videoUrl" [(ngModel)]="currentClass.videoUrl" name="videoUrl" placeholder="https://youtube.com/..." />
+            </div>
+
+            <div class="form-group half">
+              <label for="slidesUrl">Enlace a Diapositivas PDF</label>
+              <input type="url" id="slidesUrl" [(ngModel)]="currentClass.slidesUrl" name="slidesUrl" placeholder="https://slides.com/..." />
+            </div>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" [(ngModel)]="currentClass.isCompleted" name="isCompleted" />
+              Marcar esta clase como COMPLETADA
+            </label>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" [(ngModel)]="currentClass.hasAssignment" name="hasAssignment" />
+              Incluye Tarea / Entregable Evaluado
+            </label>
+          </div>
+
+          <div *ngIf="currentClass.hasAssignment">
+            <div class="form-group">
+              <label for="assTitle">Título de la Tarea</label>
+              <input type="text" id="assTitle" [(ngModel)]="currentClass.assignmentTitle" name="assignmentTitle" placeholder="Ej: Tarea 4: API Gateway con Resiliency4j" />
+            </div>
+
+            <div class="form-group">
+              <label for="assDesc">Indicaciones de la Tarea</label>
+              <textarea id="assDesc" [(ngModel)]="currentClass.assignmentDescription" name="assignmentDescription" rows="2"></textarea>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-ghost" (click)="closeModal()">Cancelar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="saving || !currentClass.title">
+              {{ saving ? 'Guardando...' : 'Guardar Clase' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

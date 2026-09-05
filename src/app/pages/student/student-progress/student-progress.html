@@ -1,0 +1,165 @@
+<div class="progress-wrapper">
+  <!-- Header -->
+  <div class="platform-header">
+    <span class="platform-eyebrow">// mi plan de estudios</span>
+    <h2>Mi progreso y currícula del bootcamp</h2>
+    <p>Revisa el contenido de las clases, grabaciones, presentaciones y sube tus tareas de evaluación.</p>
+  </div>
+
+  <div *ngIf="toastMessage" class="alert alert-success toast-floating">
+    {{ toastMessage }}
+  </div>
+
+  <div *ngIf="loading" class="loading-box">
+    Cargando tu mapa de clases y entregables...
+  </div>
+
+  <div *ngIf="!loading && progressData" class="progress-container">
+    <!-- Progress Header Stat Card -->
+    <div class="panel-card hero-progress-card">
+      <div class="bracket-mark">&#123; &#125;</div>
+      <div class="hero-progress-info">
+        <span class="program-tag">{{ progressData.programName }}</span>
+        <h3>Progreso del Bootcamp</h3>
+        <p>Has completado {{ progressData.completedClasses }} de {{ progressData.totalClasses }} clases en vivo.</p>
+      </div>
+
+      <div class="progress-gauge">
+        <div class="gauge-value">{{ progressData.progressPercentage }}%</div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" [style.width.%]="progressData.progressPercentage"></div>
+        </div>
+        <span class="gauge-label">Avance general</span>
+      </div>
+    </div>
+
+    <!-- Modules Navigation Tabs -->
+    <div class="modules-tabs">
+      <button
+        *ngFor="let mod of progressData.modules"
+        class="mod-tab-btn"
+        [class.active]="selectedModule === mod"
+        (click)="selectModule(mod)"
+      >
+        <span class="mod-name">{{ mod.moduleName }}</span>
+        <span class="mod-count">{{ mod.completedClasses }}/{{ mod.totalClasses }} completadas</span>
+      </button>
+    </div>
+
+    <!-- Active Module Details & Classes -->
+    <div *ngIf="selectedModule" class="module-content">
+      <div class="module-header">
+        <h4>{{ selectedModule.moduleName }}</h4>
+        <span class="badge badge-info">{{ selectedModule.completedClasses }} de {{ selectedModule.totalClasses }} Clases Vistas</span>
+      </div>
+
+      <div class="classes-list">
+        <div
+          *ngFor="let clazz of selectedModule.classes"
+          class="class-card"
+          [class.is-completed]="clazz.isCompleted"
+        >
+          <div class="class-header-row">
+            <div class="class-title-box">
+              <span class="class-num">Clase {{ clazz.classNumber }}</span>
+              <h5 class="class-title">{{ clazz.title }}</h5>
+            </div>
+            <div class="class-status-badge">
+              <span *ngIf="clazz.isCompleted" class="badge badge-success">Completada</span>
+              <span *ngIf="!clazz.isCompleted" class="badge badge-warning">Próxima / En vivo</span>
+            </div>
+          </div>
+
+          <p class="class-desc">{{ clazz.description }}</p>
+
+          <!-- Resources & Links -->
+          <div class="class-resources">
+            <a *ngIf="clazz.videoUrl" [href]="clazz.videoUrl" target="_blank" rel="noopener" class="res-link">
+              📹 Ver Grabación
+            </a>
+            <a *ngIf="clazz.slidesUrl" [href]="clazz.slidesUrl" target="_blank" rel="noopener" class="res-link">
+              📄 Diapositivas PDF
+            </a>
+          </div>
+
+          <!-- Assignment Box -->
+          <div *ngIf="clazz.hasAssignment" class="assignment-box">
+            <div class="assignment-info">
+              <span class="assign-label">📌 Tarea Evaluada:</span>
+              <strong>{{ clazz.assignmentTitle }}</strong>
+              <p>{{ clazz.assignmentDescription }}</p>
+            </div>
+
+            <div class="assignment-action">
+              <div *ngIf="clazz.submission" class="submission-badge">
+                <span class="badge badge-success">✓ Entregado</span>
+                <span class="sub-date" *ngIf="clazz.submission.submittedAt">{{ clazz.submission.submittedAt | date:'shortDate' }}</span>
+              </div>
+              <button class="btn btn-primary btn-sm" (click)="openTaskModal(clazz)">
+                {{ clazz.submission ? 'Ver / Editar Tarea' : 'Subir Tarea' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task Submission Modal -->
+  <div *ngIf="showTaskModal" class="modal-backdrop" (click)="closeTaskModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Subir Tarea / Entregable</h3>
+        <button class="close-btn" (click)="closeTaskModal()">×</button>
+      </div>
+
+      <div class="modal-body" *ngIf="activeClassForTask">
+        <p class="modal-subtitle">Clase: <strong>{{ activeClassForTask.title }}</strong></p>
+        <p class="modal-desc">{{ activeClassForTask.assignmentTitle }}</p>
+
+        <form (ngSubmit)="submitTask()">
+          <div class="form-group">
+            <label for="repoUrl">URL del Repositorio de GitHub *</label>
+            <input
+              type="url"
+              id="repoUrl"
+              [(ngModel)]="repositoryUrl"
+              name="repositoryUrl"
+              placeholder="https://github.com/tu-usuario/mi-proyecto-backend"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="taskNotes">Notas o Explicación para el Mentor</label>
+            <textarea
+              id="taskNotes"
+              [(ngModel)]="submissionNotes"
+              name="submissionNotes"
+              rows="3"
+              placeholder="Ej: Implementé la API REST con Spring Security JWT y pruebas unitarias con JUnit 5..."
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="fileUrl">Enlace a Documento / Archivo Adicional (Opcional)</label>
+            <input
+              type="url"
+              id="fileUrl"
+              [(ngModel)]="fileUrl"
+              name="fileUrl"
+              placeholder="https://drive.google.com/... o enlace de descarga S3"
+            />
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-ghost" (click)="closeTaskModal()">Cancelar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="submitting || !repositoryUrl">
+              {{ submitting ? 'Guardando...' : 'Enviar Entregable' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,65 +1,117 @@
+.payments-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.linked-card-banner {
+  background: var(--navy-2);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--mint);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.banner-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.banner-icon {
+  font-size: 1.5rem;
+}
+
+.banner-left strong {
+  display: block;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.banner-left span {
+  color: var(--slate-soft);
+  font-size: 0.9rem;
+}
+
 .installments-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 16px;
+  gap: 1.5rem;
 }
 
 .installment-card {
-  background: var(--card);
-  border: 1.5px solid #E4E7EB;
-  border-radius: 16px;
-  padding: 20px;
+  background: var(--navy-2);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1.4rem;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  justify-content: space-between;
 }
 
-.installment-card.card-pagado { border-color: rgba(31,166,121,0.35); }
-.installment-card.card-pausado { border-color: rgba(242,169,59,0.4); }
-.installment-card.card-fallido { border-color: rgba(229,72,77,0.35); }
+.card-pagado {
+  border-color: rgba(62, 217, 160, 0.3);
+}
 
 .card-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
 }
-.inst-title { font-weight: 700; font-size: 14px; color: var(--ink); }
 
-.inst-badge {
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: 11px;
-  padding: 5px 11px;
-  border-radius: 30px;
-  background: #F0F1F3;
-  color: var(--ink-soft);
-}
-.card-pagado .inst-badge { background: var(--mint-tint); color: var(--mint-dark); }
-.card-pausado .inst-badge { background: var(--amber-tint); color: #8A5A0E; }
-.card-fallido .inst-badge { background: var(--danger-tint); color: var(--danger); }
-
-.card-body .amount {
+.inst-title {
   font-family: var(--font-head);
-  font-weight: 700;
-  font-size: 24px;
-  color: var(--ink);
+  font-size: 1.1rem;
+  color: #fff;
 }
-.card-body .meta {
-  font-size: 11.5px;
-  color: var(--ink-soft);
-  margin-top: 4px;
+
+.amount {
+  font-family: var(--font-head);
+  font-size: 1.8rem;
+  color: var(--mint);
+  margin-bottom: 0.5rem;
 }
+
+.meta {
+  color: var(--slate);
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
 .mp-tag {
   display: block;
   font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--ink-soft);
-  margin-top: 4px;
+  font-size: 0.75rem;
+  color: var(--slate-soft);
 }
 
 .card-footer {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  margin-top: 1rem;
 }
-.card-footer .btn-pay, .card-footer .btn-simulated { width: 100%; text-align: center; }
+
+.btn-pay {
+  width: 100%;
+  background: var(--mint);
+  color: var(--navy);
+  border: none;
+  padding: 0.7rem;
+  border-radius: 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-pay:hover {
+  opacity: 0.9;
+}

@@ -1,76 +1,180 @@
 <div class="profile-wrapper">
   <div class="platform-header">
-    <span class="platform-eyebrow">// mi perfil</span>
-    <h2>Mi perfil y contrato</h2>
-    <p>Consulta las condiciones de tu acuerdo de pago diferido con Órbita Solutions</p>
+    <span class="platform-eyebrow">// mi perfil y documentación</span>
+    <h2>Mi perfil, documentos y contrato ISA</h2>
+    <p>Descarga los archivos oficiales armados por Órbita Solutions y consulta las obligaciones de tu acuerdo de pago diferido.</p>
   </div>
 
   <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
 
-  <div class="profile-grid">
-    <!-- Formulario Datos Personales -->
-    <form (ngSubmit)="saveProfile()" class="panel-card profile-card">
-      <h3>Mis datos personales</h3>
-      <div class="form-group">
-        <label>Nombre completo</label>
-        <input type="text" [value]="user()?.fullName" disabled />
+  <!-- Section 1: Descarga de Archivos Documentales -->
+  <div class="panel-card docs-download-card">
+    <div class="card-header-row">
+      <span class="badge badge-info">// expediente digital</span>
+      <h3>Descarga de Archivos y Documentos</h3>
+    </div>
+
+    <div class="docs-grid">
+      <!-- Card: CV Armado por Órbita -->
+      <div class="doc-item-card">
+        <div class="doc-icon">📄</div>
+        <div class="doc-details">
+          <h4>CV Profesional Armado por Órbita</h4>
+          <p>Curriculum vitae adaptado a estándar de reclutadores tech (Java Backend Developer).</p>
+          <span class="doc-meta">Formato PDF • Elaborado por Órbita Team</span>
+        </div>
+        <button class="btn btn-primary btn-sm" (click)="downloadDocument('CV_Developer_Orbita.pdf')">
+          📥 Descargar CV PDF
+        </button>
       </div>
 
-      <div class="form-group">
-        <label>Correo electrónico</label>
-        <input type="email" [value]="user()?.email" disabled />
+      <!-- Card: Contrato ISA Firmado -->
+      <div class="doc-item-card">
+        <div class="doc-icon">📜</div>
+        <div class="doc-details">
+          <h4>Contrato ISA Firmado</h4>
+          <p>Acuerdo de Compartición de Ingresos (Income Share Agreement) firmado digitalmente.</p>
+          <span class="doc-meta">Formato PDF • Validez Legal</span>
+        </div>
+        <button class="btn btn-primary btn-sm" (click)="downloadDocument('Contrato_ISA_Orbita_Firmado.pdf')">
+          📥 Descargar Contrato PDF
+        </button>
       </div>
 
-      <div class="form-group">
-        <label for="phone">Teléfono / WhatsApp</label>
-        <input type="text" id="phone" [(ngModel)]="phone" name="phone" placeholder="+51987654321" />
-      </div>
-
-      <div class="form-group">
-        <label for="documentNumber">DNI / documento de identidad</label>
-        <input type="text" id="documentNumber" [(ngModel)]="documentNumber" name="documentNumber" placeholder="72819034" />
-      </div>
-
-      <div class="form-group">
-        <label for="cvUrl">Enlace a mi CV / LinkedIn</label>
-        <input type="url" id="cvUrl" [(ngModel)]="cvUrl" name="cvUrl" placeholder="https://linkedin.com/in/tu-perfil" />
-      </div>
-
-      <button type="submit" class="btn-save" [disabled]="saving">
-        <span *ngIf="!saving">Actualizar perfil</span>
-        <span *ngIf="saving">Guardando...</span>
-      </button>
-    </form>
-
-    <!-- Resumen de Contrato ISA -->
-    <div class="panel-card contract-card">
-      <h3>Resumen del contrato (ISA)</h3>
-      <div class="contract-terms">
-        <div class="term-item">
-          <strong>Mecanismo de pago:</strong>
-          <p>12 cuotas mensuales de S/ 850.00. Inicia al conseguir empleo con un tercero en el campo TI.</p>
+      <!-- Card: Ficha de Matrícula -->
+      <div class="doc-item-card">
+        <div class="doc-icon">🎓</div>
+        <div class="doc-details">
+          <h4>Constancia de Matrícula Bootcamp</h4>
+          <p>Documento oficial que acredita tu participación activa en la cohorte actual.</p>
+          <span class="doc-meta">Formato PDF • Órbita Solutions</span>
         </div>
-
-        <div class="term-item">
-          <strong>Definición de empleo elegible:</strong>
-          <p>Cualquier empleo relacionado al área TI donde Órbita Solutions te ayude a ingresar.</p>
-        </div>
-
-        <div class="term-item">
-          <strong>Pausa por desempleo:</strong>
-          <p>Si pierdes el empleo, las cuotas se pausan automáticamente hasta encontrarte uno nuevo (excepto por abandono de trabajo).</p>
-        </div>
-
-        <div class="term-item">
-          <strong>Garantía de soporte:</strong>
-          <p>7 horas semanales de soporte técnico y mentoría garantizadas post-bootcamp.</p>
-        </div>
-
-        <div class="term-item">
-          <strong>Método de cobro:</strong>
-          <p>Mercado Pago (transferencia / tarjeta de débito o crédito)</p>
-        </div>
+        <button class="btn btn-ghost btn-sm" (click)="downloadDocument('Constancia_Matricula_Orbita.pdf')">
+          📥 Descargar Constancia
+        </button>
       </div>
     </div>
   </div>
+
+  <!-- Section 2: Resumen Estructurado del Contrato ISA (Obligaciones) -->
+  <div class="panel-card contract-summary-card">
+    <div class="card-header-row">
+      <span class="badge badge-secondary">// términos del acuerdo</span>
+      <h3>Resumen del Contrato (Obligaciones Mutuas)</h3>
+    </div>
+
+    <div class="obligations-grid">
+      <!-- Obligaciones de Órbita Solutions -->
+      <div class="obligation-column company-col">
+        <div class="col-title">
+          <span class="icon">🚀</span>
+          <h4>Obligaciones de Órbita Solutions</h4>
+        </div>
+
+        <ul class="obligation-list">
+          <li>
+            <strong>1. Formación de Alto Nivel:</strong>
+            <p>Brindar 2 meses de clases intensivas en vivo sobre Java 21, Spring Boot 3, JPA, Microservicios, Spring Cloud y Docker.</p>
+          </li>
+          <li>
+            <strong>2. Armado de CV y LinkedIn:</strong>
+            <p>Confeccionar y optimizar tu CV técnico y perfil de LinkedIn orientado a vacantes backend.</p>
+          </li>
+          <li>
+            <strong>3. Acompañamiento y Mentorías 1-a-1:</strong>
+            <p>Simulacros de entrevistas técnicas, preparación de pruebas de código y resolución de dudas.</p>
+          </li>
+          <li>
+            <strong>4. Garantía de $0 por Adelantado:</strong>
+            <p>No cobrar ningún monto por matrícula ni pensiones durante el periodo de estudio.</p>
+          </li>
+          <li>
+            <strong>5. Pausa Automática por Desempleo:</strong>
+            <p>Si te quedas sin empleo, las cuotas se pausan inmediatamente sin generar intereses ni penalizaciones.</p>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Obligaciones del Alumno / Patita -->
+      <div class="obligation-column student-col">
+        <div class="col-title">
+          <span class="icon">👨‍💻</span>
+          <h4>Obligaciones del Alumno (Patita)</h4>
+        </div>
+
+        <ul class="obligation-list">
+          <li>
+            <strong>1. Asistencia y Entregables:</strong>
+            <p>Cumplir con el 80% mínimo de asistencia a clases live y enviar los proyectos/tareas requeridos.</p>
+          </li>
+          <li>
+            <strong>2. Pago Diferido de Cuotas:</strong>
+            <p>Abonar las 12 cuotas fijas de S/ 850.00 al conseguir empleo remoto o presencial en el área TI.</p>
+          </li>
+          <li>
+            <strong>3. Reporte de Cambio Laboral:</strong>
+            <p>Notificar a la empresa en máximo 5 días hábiles cuando consigas o cambies de empleo remunerado.</p>
+          </li>
+          <li>
+            <strong>4. Búsqueda Activa de Trabajo:</strong>
+            <p>Postular activamente a un mínimo de 10 vacantes semanales tras finalizar el bootcamp.</p>
+          </li>
+          <li>
+            <strong>5. Datos y Método de Pago:</strong>
+            <p>Mantener actualizados tus datos de contacto y registrar tu tarjeta o medio de pago en Mercado Pago.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 3: Formulario de Datos Personales -->
+  <form (ngSubmit)="saveProfile()" class="panel-card profile-form-card">
+    <h3>Mis Datos de Contacto y Cuenta</h3>
+
+    <div class="form-row">
+      <div class="form-group half">
+        <label>Nombre Completo</label>
+        <input type="text" [value]="user()?.fullName" disabled />
+      </div>
+
+      <div class="form-group half">
+        <label>Correo Electrónico</label>
+        <input type="email" [value]="user()?.email" disabled />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group half">
+        <label for="phone">Teléfono / WhatsApp *</label>
+        <input type="text" id="phone" [(ngModel)]="phone" name="phone" placeholder="+51 987 654 321" />
+      </div>
+
+      <div class="form-group half">
+        <label for="documentNumber">DNI / Documento de Identidad *</label>
+        <input type="text" id="documentNumber" [(ngModel)]="documentNumber" name="documentNumber" placeholder="72819034" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="cvUrl">Enlace Personal a LinkedIn / Portfolio</label>
+      <input type="url" id="cvUrl" [(ngModel)]="cvUrl" name="cvUrl" placeholder="https://linkedin.com/in/tu-perfil o URL de S3" />
+    </div>
+
+    <div class="form-group">
+      <label>Subir CV o Documento a AWS S3 (PDF / DOCX)</label>
+      <div class="file-upload-row" style="display: flex; gap: 12px; align-items: center; margin-top: 4px;">
+        <input type="file" (change)="onFileSelected($event)" accept=".pdf,.doc,.docx" [disabled]="uploadingCv" style="background: white;" />
+        <span *ngIf="uploadingCv" style="font-size: 13px; color: var(--mint-dark); font-weight: 700;">Subiendo a AWS S3...</span>
+      </div>
+      <small *ngIf="cvUrl" style="color: var(--mint-dark); font-size: 12.5px; margin-top: 6px; display: block;">
+        <strong>URL S3:</strong> <a [href]="cvUrl" target="_blank" style="text-decoration: underline;">{{ cvUrl }}</a>
+      </small>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="saving">
+      <span *ngIf="!saving">Actualizar Datos</span>
+      <span *ngIf="saving">Guardando...</span>
+    </button>
+  </form>
 </div>

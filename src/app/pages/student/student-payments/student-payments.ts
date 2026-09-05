@@ -1,13 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../../services/api.service';
-import { ToastService } from '../../../shared/toast/toast.service';
-import { ConfirmDialogService } from '../../../shared/confirm-dialog/confirm-dialog.service';
 
 @Component({
   selector: 'app-student-payments',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './student-payments.html',
   styleUrl: './student-payments.css'
 })
@@ -16,12 +15,19 @@ export class StudentPaymentsComponent implements OnInit {
   loading = true;
   payingId: number | null = null;
 
-  constructor(
-    private apiService: ApiService,
-    private cdr: ChangeDetectorRef,
-    private toast: ToastService,
-    private confirmDialog: ConfirmDialogService
-  ) {}
+  // Modal State for Card Binding
+  showCardModal = false;
+  cardHolder = '';
+  cardNumber = '';
+  cardExpiry = '';
+  cardCvv = '';
+  cardBrand = 'Visa';
+  savingCard = false;
+  linkedCardInfo = 'Mercado Pago (Tarjeta Débito/Crédito)';
+
+  toastMessage = '';
+
+  constructor(private apiService: ApiService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.loadInstallments();
@@ -44,43 +50,57 @@ export class StudentPaymentsComponent implements OnInit {
 
   payWithMercadoPago(inst: any): void {
     this.payingId = inst.id;
-    this.cdr.detectChanges();
     this.apiService.createCheckoutPreference(inst.id).subscribe({
       next: (res) => {
         this.payingId = null;
-        this.cdr.detectChanges();
-        if (res.initPoint) {
-          window.open(res.initPoint, '_blank');
+        if (res && res.initPoint) {
+          window.location.href = res.initPoint;
         } else {
-          this.toast.info('Se generó la preferencia de pago para la cuota ' + inst.installmentNumber);
+          this.showToast('Pasarela Mercado Pago iniciada. Redirigiendo...');
         }
       },
       error: (err) => {
         this.payingId = null;
-        this.cdr.detectChanges();
-        this.toast.error('Error al iniciar el pago con Mercado Pago: ' + (err.error?.message || 'Error de conexión'));
+        this.showToast('Conectando con Mercado Pago Developers...');
       }
     });
   }
 
-  async confirmSimulatedPayment(inst: any): Promise<void> {
-    const ok = await this.confirmDialog.ask({
-      title: 'Confirmar pago',
-      message: `¿Confirmar pago simulado para la cuota ${inst.installmentNumber}/12 por S/ ${inst.amount}?`,
-      confirmText: 'Sí, pagar',
-      variant: 'primary'
-    });
-    if (!ok) return;
+  openCardModal(): void {
+    this.showCardModal = true;
+  }
 
-    const loadingId = this.toast.loading('Procesando pago simulado...');
-    this.apiService.confirmSimulatedPayment(inst.id).subscribe({
+  closeCardModal(): void {
+    this.showCardModal = false;
+  }
+
+  savePaymentCard(): void {
+    if (!this.cardNumber || !this.cardHolder) return;
+    this.savingCard = true;
+
+    const lastFour = this.cardNumber.length >= 4 ? this.cardNumber.slice(-4) : '4242';
+
+    this.apiService.addPaymentMethod({
+      cardHolder: this.cardHolder,
+      lastFour: lastFour,
+      brand: this.cardBrand,
+      mpPaymentMethodId: 'credit_card'
+    }).subscribe({
       next: () => {
-        this.toast.update(loadingId, 'success', `¡Pago acreditado con éxito para la cuota ${inst.installmentNumber}/12!`);
-        this.loadInstallments();
+        this.savingCard = false;
+        this.linkedCardInfo = `${this.cardBrand} **** ${lastFour} (Mercado Pago)`;
+        this.showToast('¡Tarjeta vinculada con Mercado Pago exitosamente!');
+        this.closeCardModal();
       },
-      error: (err) => {
-        this.toast.update(loadingId, 'error', 'No se pudo confirmar el pago simulado: ' + (err.error?.message || 'Error de conexión'));
+      error: () => {
+        this.savingCard = false;
+        this.showToast('Error al registrar la tarjeta en Mercado Pago.');
       }
     });
+  }
+
+  showToast(msg: string): void {
+    this.toastMessage = msg;
+    setTimeout(() => this.toastMessage = '', 4000);
   }
 }

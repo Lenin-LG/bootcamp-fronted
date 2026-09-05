@@ -1,8 +1,32 @@
 <div class="payments-wrapper">
   <div class="platform-header">
-    <span class="platform-eyebrow">// mis cuotas</span>
-    <h2>Mis 12 cuotas de pago diferido</h2>
-    <p>Visualiza el estado individual de cada cuota mensual de S/ 850.00</p>
+    <div class="header-flex">
+      <div>
+        <span class="platform-eyebrow">// cuotas y pasarela de pago</span>
+        <h2>Mis 12 cuotas de pago diferido</h2>
+        <p>Visualiza y gestiona el pago de tus cuotas mensuales mediante Mercado Pago Developers.</p>
+      </div>
+
+      <button class="btn btn-primary" (click)="openCardModal()">
+        💳 Vincular Tarjeta Mercado Pago
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="toastMessage" class="alert alert-success toast-floating">
+    {{ toastMessage }}
+  </div>
+
+  <!-- Banner Método de Pago Activo -->
+  <div class="linked-card-banner">
+    <div class="banner-left">
+      <span class="banner-icon">🔒</span>
+      <div>
+        <strong>Método de pago activo para cuotas:</strong>
+        <span>{{ linkedCardInfo }}</span>
+      </div>
+    </div>
+    <span class="badge badge-success">Verificado Mercado Pago</span>
   </div>
 
   <div *ngIf="loading" class="loading-box">Cargando tus cuotas...</div>
@@ -46,11 +70,60 @@
           [disabled]="payingId === inst.id"
         >
           <span *ngIf="payingId !== inst.id">Pagar con Mercado Pago</span>
-          <span *ngIf="payingId === inst.id">Cargando pasarela...</span>
+          <span *ngIf="payingId === inst.id">Cargando Pasarela MP...</span>
         </button>
-        <button class="btn-simulated" (click)="confirmSimulatedPayment(inst)" title="Probar pago instantáneo local">
-          Simular pago
-        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Vincular Tarjeta Mercado Pago -->
+  <div *ngIf="showCardModal" class="modal-backdrop" (click)="closeCardModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Vincular Tarjeta en Mercado Pago</h3>
+        <button class="close-btn" (click)="closeCardModal()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-desc">
+          Ingresa los datos de tu tarjeta de crédito o débito para vincularla a tu cuenta de Órbita Solutions vía Mercado Pago.
+        </p>
+
+        <form (ngSubmit)="savePaymentCard()">
+          <div class="form-group">
+            <label for="cHolder">Nombre del Titular (como aparece en la tarjeta) *</label>
+            <input type="text" id="cHolder" [(ngModel)]="cardHolder" name="cardHolder" required placeholder="JUAN PEREZ" />
+          </div>
+
+          <div class="form-group">
+            <label for="cNumber">Número de Tarjeta *</label>
+            <input type="text" id="cNumber" [(ngModel)]="cardNumber" name="cardNumber" maxlength="19" required placeholder="4557 0000 0000 4242" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group half">
+              <label for="cBrand">Franquicia</label>
+              <select id="cBrand" [(ngModel)]="cardBrand" name="cardBrand">
+                <option value="Visa">Visa</option>
+                <option value="Mastercard">Mastercard</option>
+                <option value="American Express">American Express</option>
+                <option value="Diners Club">Diners Club</option>
+              </select>
+            </div>
+
+            <div class="form-group half">
+              <label for="cExpiry">Vencimiento (MM/AA)</label>
+              <input type="text" id="cExpiry" [(ngModel)]="cardExpiry" name="cardExpiry" placeholder="12/28" />
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-ghost" (click)="closeCardModal()">Cancelar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="savingCard || !cardNumber || !cardHolder">
+              {{ savingCard ? 'Tokenizando...' : 'Vincular Tarjeta Oficial' }}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

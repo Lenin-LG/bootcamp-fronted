@@ -1,46 +1,129 @@
 <div class="dashboard-wrapper">
   <div class="platform-header">
-    <span class="platform-eyebrow">// mi cuenta</span>
-    <h2>Mi cuenta y progreso bootcamp</h2>
-    <p>Resumen de tu acuerdo de pago diferido con Órbita Solutions</p>
+    <span class="platform-eyebrow">// mi panel principal</span>
+    <h2>Resumen de alumno y progreso bootcamp</h2>
+    <p>Bienvenido a tu portal Órbita Solutions. Consulta tu avance académico y el estado de tu contrato ISA.</p>
   </div>
 
   <div *ngIf="loading" class="loading-box">Cargando tu información...</div>
 
-  <div *ngIf="summary && !loading" class="summary-card">
-    <div class="summary-header">
-      <div class="user-info">
-        <h3>{{ summary.fullName }}</h3>
-        <p>{{ summary.email }}</p>
+  <div *ngIf="summary && !loading" class="dashboard-grid">
+    <!-- Stat Cards Row -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-label">Cuotas pagadas</span>
+        <div class="stat-value highlight">{{ summary.paidInstallments }} / {{ summary.totalInstallments }}</div>
+        <span class="stat-desc">Acuerdo ISA 12 meses</span>
       </div>
-      <div class="status-badge" [ngClass]="{
-        'status-working': summary.employmentStatus === 'TRABAJANDO',
-        'status-searching': summary.employmentStatus === 'BUSCANDO_TRABAJO'
-      }">
-        Estado: {{ summary.employmentStatus === 'TRABAJANDO' ? 'Trabajando' : 'Buscando trabajo' }}
+
+      <div class="stat-card">
+        <span class="stat-label">Saldo pendiente</span>
+        <div class="stat-value">S/ {{ summary.remainingBalance | number:'1.2-2' }}</div>
+        <span class="stat-desc">Monto total diferido</span>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-label">Próximo pago</span>
+        <div class="stat-value accent">S/ {{ summary.nextPaymentAmount | number:'1.2-2' }}</div>
+        <span class="stat-desc" *ngIf="summary.nextDueDate">Vence: {{ summary.nextDueDate | date:'shortDate' }}</span>
+        <span class="stat-desc" *ngIf="!summary.nextDueDate">Inicia al conseguir empleo TI</span>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-label">Estado laboral</span>
+        <div class="stat-value" [ngClass]="{
+          'text-success': summary.employmentStatus === 'TRABAJANDO',
+          'text-warning': summary.employmentStatus === 'BUSCANDO_TRABAJO'
+        }">
+          {{ summary.employmentStatus === 'TRABAJANDO' ? 'Trabajando' : 'Buscando Trabajo' }}
+        </div>
+        <span class="stat-desc">{{ summary.companyName ? summary.companyName : 'Pausa de cobro activa' }}</span>
       </div>
     </div>
 
-    <div class="metrics-row">
-      <div class="metric-item">
-        <span class="label">Cuotas pagadas</span>
-        <span class="val highlight">{{ summary.paidInstallments }} / {{ summary.totalInstallments }}</span>
+    <!-- Main Content Section: Program & Profile -->
+    <div class="content-row">
+      <!-- Card: Programa Actual & Progreso de Clases -->
+      <div class="panel-card program-card">
+        <div class="card-title-row">
+          <span class="badge badge-info">// en curso</span>
+          <h3>Programa Actual</h3>
+        </div>
+
+        <h4 class="program-name">{{ summary.programName || 'Bootcamp Backend Java, Spring Boot & Spring Cloud' }}</h4>
+        <p class="program-mod">Módulo Actual: <strong>{{ summary.currentModuleName }}</strong></p>
+
+        <!-- Progress bar -->
+        <div class="progress-section">
+          <div class="progress-labels">
+            <span>Progreso de clases: <strong>Clase {{ summary.currentClassNumber }} de {{ summary.totalClasses }}</strong></span>
+            <span class="progress-pct">{{ summary.progressPercentage }}%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" [style.width.%]="summary.progressPercentage"></div>
+          </div>
+        </div>
+
+        <!-- Next Session Callout -->
+        <div class="next-session-box">
+          <div class="next-icon">📅</div>
+          <div class="next-info">
+            <span class="next-label">Próxima Clase En Vivo</span>
+            <strong>{{ summary.nextClassTitle }}</strong>
+            <small>{{ summary.nextClassDate }}</small>
+          </div>
+          <a routerLink="/alumno/mi-progreso" class="btn btn-primary btn-sm">Ir a mis clases</a>
+        </div>
+
+        <div class="card-footer-actions">
+          <a routerLink="/alumno/mi-progreso" class="btn btn-ghost btn-ghost--light">Ver syllabus completo y tareas</a>
+          <a routerLink="/alumno/mis-pagos" class="btn btn-ghost btn-ghost--light">Ver mis 12 cuotas</a>
+        </div>
       </div>
 
-      <div class="metric-item">
-        <span class="label">Saldo pendiente</span>
-        <span class="val">S/ {{ summary.remainingBalance | number:'1.2-2' }}</span>
-      </div>
+      <!-- Card: Datos del Perfil Generales -->
+      <div class="panel-card profile-summary-card">
+        <div class="card-title-row">
+          <span class="badge badge-secondary">// mis datos</span>
+          <h3>Ficha del Alumno</h3>
+        </div>
 
-      <div class="metric-item">
-        <span class="label">Próximo pago</span>
-        <span class="val accent">S/ {{ summary.nextPaymentAmount | number:'1.2-2' }}</span>
-      </div>
-    </div>
+        <div class="profile-details-list">
+          <div class="detail-item">
+            <span class="detail-label">Nombre completo:</span>
+            <strong class="detail-val">{{ summary.fullName }}</strong>
+          </div>
 
-    <div class="actions-row">
-      <a routerLink="/alumno/mis-pagos" class="btn btn-primary">Ver mis 12 cuotas</a>
-      <a routerLink="/alumno/mi-empleo" class="btn btn-ghost btn-ghost--light">Reportar cambio laboral</a>
+          <div class="detail-item">
+            <span class="detail-label">Correo electrónico:</span>
+            <span class="detail-val">{{ summary.email }}</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Teléfono / WhatsApp:</span>
+            <span class="detail-val">{{ summary.phone }}</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">DNI / Documento:</span>
+            <span class="detail-val">{{ summary.documentNumber }}</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Contrato ISA:</span>
+            <span class="badge badge-success">Activo (Pago Diferido)</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Garantía Órbita:</span>
+            <span class="detail-val text-amber">$0 por adelantado</span>
+          </div>
+        </div>
+
+        <div class="profile-card-footer">
+          <a routerLink="/alumno/mi-perfil" class="btn btn-primary full-width">Ver mi perfil completo y contrato</a>
+        </div>
+      </div>
     </div>
   </div>
 </div>
